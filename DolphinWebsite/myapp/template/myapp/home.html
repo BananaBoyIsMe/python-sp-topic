@@ -1,11 +1,25 @@
 {% extends 'myapp/base.html' %}
+{% load static %}
 
 {% block myheader %}
-    <h1>this is the content from block header</h1>
+    <link rel="stylesheet" href="{% static 'css/myCSS.css' %}">
+    <h1> <center> Welcome to CoC Gaming Shop </center> </h1>
 {% endblock myheader %}
 
-{% block content %} 
+{% block content %}
 
-    <h1>This is the content from home. Hello from Loma.html</h1>
+    <!-- <h1>This is the content from home. Hello from Loma.html</h1> -->
+
+    <center>
+        {% for data in pd %}
+        <h1>{{ data.title }}</h1>
+        <p>
+            {{ data.description }} <br>
+            price : {{ data.price }} <br>
+            stock : {{ data.quantity }} <br>
+        </p>
+        <hr>
+        {% endfor %}
+    </center>
 
 {% endblock content %} 

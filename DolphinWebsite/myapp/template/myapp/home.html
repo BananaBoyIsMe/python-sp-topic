@@ -4,6 +4,15 @@
 {% block myheader %}
     <link rel="stylesheet" href="{% static 'css/myCSS.css' %}">
     <h1> <center> Welcome to CoC Gaming Shop </center> </h1>
+
+    {% if user.profile.usertype == 'vvip' %}
+        <center> 15% Discount for VIP member </center>
+    {% elif user.profile.usertype == 'vip' %}
+        <center> 10% Discount for VIP member </center>
+    {% elif user.profile.usertype == 'member' %}
+        <center> 15% Discount for VIP member </center>
+    {% endif %}
+
 {% endblock myheader %}
 
 {% block content %}

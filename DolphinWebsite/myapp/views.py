@@ -1,8 +1,10 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 from django.http import HttpResponse
 
 from .models import *
+
+from django.contrib.auth import authenticate, login
 
 # Create your views here.
 def home(request):
@@ -15,3 +17,51 @@ def home2(request):
 
 def aboutUs(request):
     return render(request, 'myapp/aboutus.html')
+
+def contact(request):
+    context = {} # message to notify
+    if request.method == 'POST':
+        data = request.POST.copy()
+        topic = data.get('topic')
+        email = data.get('email')
+        detail = data.get('detail')
+
+        if (topic == '' or email == '' or detail == ''):
+            context['message'] = 'Please, fill in all the contact information'
+            return render(request, 'myapp/contact.html', context)
+        newRecord = contactList() # create object
+        newRecord.topic = topic
+        newRecord.email = email
+        newRecord.detail = detail
+        newRecord.save() # save data
+
+        context['message'] = 'The message has been received'
+
+        # print(topic)
+        # print(email)
+        # print(detail)
+        # print("---------")
+    return render(request, 'myapp/contact.html', context)
+
+def userLogin(request):
+    context = {}
+
+    if request.method == 'POST':
+        data = request.POST.copy()
+        username = data.get('username')
+        password = data.get('password')
+
+        try:
+            user = authenticate(username=username, password=password)
+            login(request, user)
+            return redirect('home-page')
+        except:
+            context['message'] = "username or password is incorrect."
+
+    return render(request, 'myapp/login.html', context)
+
+def showContact(request):
+    allcontact = contactList.objects.all()
+    # allcontact = contactList.objects.all().order_by('-id') # reverse list
+    context = {'contact': allcontact}
+    return render(request, 'myapp/showcontact.html', context)
